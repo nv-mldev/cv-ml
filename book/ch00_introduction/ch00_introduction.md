@@ -1,4 +1,4 @@
-# Chapter 0 — From Measurements to Meaning
+# 0 — From Measurements to Meaning
 
 ## Why This Book Exists
 
@@ -45,10 +45,37 @@ $$
 where $f$ is whatever the underlying physics dictates — linear,
 exponential, wavy, arbitrary.
 
+Two examples to fix the idea:
+
+| | $x$ (source) | $f$ | $y$ (measurement) |
+|---|---|---|---|
+| Thermometer | True room temperature | Linear scaling (sensor response) | Reading on the display |
+| Camera pixel | Light hitting the surface (scene radiance) | Lens + sensor transfer function | Gray-level pixel value |
+
+In both cases, a perfect sensor would give you $f(x)$ exactly — no
+guesswork, no error. The thermometer would read the true temperature;
+the pixel would perfectly encode the true brightness.
+
 **In a perfect world, machine learning wouldn't exist.** If you knew $f$,
 you'd just plug in $x$ and read off $y$. No learning, no estimation, no
 uncertainty. The entire ML and signal-processing industry hinges on
 everything that comes next.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x_grid = np.linspace(0, 10, 200)
+true_f = lambda x: 2.0 * x + 0.5      # perfect linear sensor
+y_clean = true_f(x_grid)
+
+fig, ax = plt.subplots(figsize=(8, 4.5))
+ax.plot(x_grid, y_clean, linewidth=2.5, label='y = f(x) (the truth)')
+ax.set_xlabel('x (input / knob setting)')
+ax.set_ylabel('y (sensor reading)')
+ax.set_title('The clean world — perfect sensor, no ML needed')
+ax.legend()
+```
 
 ![The clean world: a perfect sensor reading out the exact value of $f(x)$.](ch00_clean_world.png)
 
@@ -59,8 +86,11 @@ everything that comes next.
 Real sensors don't give you $f(x)$. They give you
 $f(x) + \text{garbage}$. The garbage has physical origins:
 
-- **Thermal noise** — electrons jiggling because the sensor is at nonzero
-  temperature.
+- **Thermal noise** — electrons jiggling due to temperature; reducible by
+  cooling but never fully eliminable.
+- **Shot noise** — photons and electrons arrive at random discrete times,
+  not as a smooth continuous stream; present in every semiconductor device
+  (photodiode, CMOS pixel, transistor) regardless of temperature.
 - **Quantization** — the ADC rounds to the nearest integer count.
 - **Calibration drift** — the sensor baseline changes over hours or days.
 - **Stray light / EM interference** — unintended signals leaking in.
@@ -76,13 +106,42 @@ variance.
 Hold $x$ fixed. Read the sensor 1000 times. In the clean world the
 readings would all be identical. In reality they scatter:
 
+```python
+x_fixed   = 5.0
+true_value = true_f(x_fixed)   # = 10.5
+noise_std  = 0.8
+num_reads  = 1000
+
+# Each reading = true value + independent Gaussian noise
+readings = true_value + np.random.randn(num_reads) * noise_std
+
+print(f"True value : {true_value}")
+print(f"Sample mean: {readings.mean():.4f}")   # close to true_value
+print(f"Sample std : {readings.std():.4f}")    # close to noise_std
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
+
+# Left: scatter of readings over time
+axes[0].scatter(range(num_reads), readings, s=8, alpha=0.6)
+axes[0].axhline(true_value, linestyle='--', label=f'true value = {true_value}')
+axes[0].set_xlabel('reading number')
+axes[0].set_ylabel('sensor output y')
+
+# Right: histogram — noise has structure (bell shape)
+axes[1].hist(readings, bins=40, alpha=0.7, edgecolor='white')
+axes[1].axvline(true_value, linestyle='--', label='true value')
+axes[1].axvline(readings.mean(), label=f'sample mean = {readings.mean():.3f}')
+axes[1].set_xlabel('sensor output y')
+axes[1].set_ylabel('count')
+```
+
 ![1000 repeated readings at a fixed x. Left: the sequence of values. Right: their distribution.](ch00_repeated_readings.png)
 
 Two observations that matter for everything that follows:
 
 1. **Single readings are almost useless.** No individual reading equals
-   the truth. The best we can say is *"probably within a couple of
-   $\sigma$ of the truth."*
+   the truth. The best we can say is *"probably within the typical spread
+   of the truth."*
 2. **The readings aren't random in a lawless way.** They cluster — the
    distribution has a **shape**, a mean, a spread, symmetry. Noise is
    unpredictable at the level of one sample but predictable at the
@@ -92,6 +151,37 @@ That second point is the foundation of everything. We can't beat noise on
 a single reading, but we can *characterize* it well enough to design
 algorithms that work on average. The mathematical name for this is
 **statistics**.
+
+> **Running example — MVTec AD, Tile category**
+>
+> We will use one concrete dataset throughout this book to keep the
+> abstractions grounded.
+>
+> The **MVTec Anomaly Detection (MVTec AD)** dataset is a public
+> industrial surface inspection benchmark from MVTec GmbH. We use the
+> **Tile category** — grayscale images of ceramic tile surfaces captured
+> under controlled overhead lighting by a monochrome camera. Some images
+> contain defects (cracks, glue strips, discolorations, rough patches);
+> most do not. The task: decide whether a surface patch is defective.
+>
+> | Abstract | Concrete (MVTec Tile) |
+> |----------|----------|
+> | Source $x$ | a surface patch at a fixed location |
+> | True value $f(x)$ | true surface reflectance at that patch |
+> | Measurement $y$ | gray-level pixel value recorded by the camera |
+> | Noise $\epsilon$ | sensor thermal noise, shot noise, stray light |
+>
+> This one dataset will be attacked three ways across the book:
+> - **Attack 1** — average and filter images to suppress noise and reveal defect structure
+> - **Attack 2** — fit a parametric texture model; flag patches that deviate from the fitted surface
+> - **Attack 3** — train a CNN on labeled defect/no-defect patches
+>
+> In a perfect sensor, the pixel values would encode true reflectance
+> exactly and defects would be trivially visible. In practice, noise and
+> texture variation make this hard — and that difficulty is exactly what
+> drives everything that follows.
+>
+> ![Left: a defect-free tile. Right: a tile with a crack defect. MVTec AD dataset — Tile category (MVTec GmbH).](ch00_mvtec_tile.png)
 
 ---
 
@@ -110,6 +200,31 @@ Your sensor's noise is the sum of many tiny independent contributions:
 thermal, quantization, vibration, EM. By the CLT, their aggregate is
 approximately Gaussian. **This is physics, not a mathematical
 convenience.**
+
+```python
+num_draws = 50_000
+K_values  = [1, 3, 10, 30]   # number of uniforms to sum
+
+fig, axes = plt.subplots(1, 4, figsize=(15, 3.5))
+
+for ax, K in zip(axes, K_values):
+    # Sum K independent uniform(-0.5, 0.5) samples
+    samples = np.random.uniform(-0.5, 0.5, size=(num_draws, K))
+    sums    = samples.sum(axis=1)
+
+    ax.hist(sums, bins=60, density=True, alpha=0.7, edgecolor='white')
+
+    # Overlay matched Gaussian: variance of uniform(-0.5,0.5) = 1/12
+    sigma   = np.sqrt(K / 12.0)
+    x_plot  = np.linspace(sums.min(), sums.max(), 200)
+    gauss   = np.exp(-x_plot**2 / (2 * sigma**2)) / (sigma * np.sqrt(2 * np.pi))
+    ax.plot(x_plot, gauss, linewidth=2, label=f'Gaussian σ={sigma:.2f}')
+
+    ax.set_title(f'sum of {K} uniform(s)')
+    ax.set_xlabel('value')
+    ax.set_ylabel('density')
+    ax.legend(fontsize=8)
+```
 
 ![CLT in action: summing more and more uniform (non-Gaussian) samples produces a bell curve.](ch00_clt.png)
 
@@ -157,6 +272,29 @@ Wiener filtering, Kalman filtering — all are sophisticated forms of
   measured.
 - **Doesn't buy you:** any predictions for *new* $x$ values.
 
+Two flavours of averaging matter in practice:
+
+| | Ensemble average | Signal average (moving average) |
+|---|---|---|
+| What you average | Many repeated trials at the same point | Neighbouring values across position or time |
+| Assumption | Each trial has independent noise | Signal is locally smooth within the window |
+| Practical limit | Need many repetitions of the same measurement | Blurs sharp edges and fine detail |
+| Imaging example | Average 100 frames of the same scene | Slide a window across one frame, average pixels inside it |
+
+In a lab you can often do ensemble averaging — hold everything still and
+repeat. In production imaging you rarely can (scene changes, one frame
+available), so **signal averaging** (spatial smoothing, Gaussian blur,
+moving average filter) is the practical tool. Wider window → more noise
+reduction but more blurring of real defect edges. Part II covers both
+in detail.
+
+> **MVTec example:** average multiple exposures of the same tile patch
+> to suppress sensor noise, then apply a smoothing filter to separate
+> the slow-varying background texture from sharp defect edges. This
+> reduces noise and makes defect structure more visible — but only tells
+> us about patches we have already imaged. It gives no prediction for
+> unseen surfaces.
+
 Parts II and III of this book develop this attack for the imaging case:
 sampling, sensors, pixels, contrast, and why raw-pixel operations run
 into fundamental limitations.
@@ -172,14 +310,43 @@ Examples:
 - Sensor calibration: $y = \alpha x + \beta$ — slope and offset.
 - Ideal gas: $PV = nRT$ — fit $n$ to data.
 
-Pick the constants that make the model best match the data (usually
-least-squares). This is what classical statistics calls **regression**.
-You're not discovering what $f$ looks like; you're nailing down a few
-numbers inside a form that was handed to you by domain knowledge.
+Pick the constants that make the model best match the data. The standard
+criterion is **least-squares**: choose $\alpha$ and $\beta$ to minimise
+the total squared gap between each measurement $y_i$ and the model's
+prediction $\alpha x_i + \beta$:
+
+$$\min_{\alpha,\, \beta} \sum_{i=1}^{N} \bigl(y_i - \alpha x_i - \beta\bigr)^2$$
+
+Intuitively: draw all possible lines through the scatter of points; the
+least-squares line is the one where the sum of the squared vertical
+distances from each point to the line is smallest. Squaring the gaps
+means large errors are penalised more heavily than small ones — a point
+twice as far from the line contributes four times the penalty. This is
+both a strength and a weakness: the fit responds strongly to every
+point, but a single outlier with a large gap pulls the line toward it
+to reduce that squared penalty. Least-squares is not outlier-robust.
+
+The values of $\alpha$ and $\beta$ that achieve this minimum can be
+computed exactly from the data — no iteration needed. This is what
+classical statistics calls **regression**. You're not discovering what
+$f$ looks like; you're nailing down a few numbers inside a form that
+was handed to you by domain knowledge. The full derivation — why
+squaring, why this specific formula, and its connection to maximum
+likelihood under Gaussian noise — arrives in Chapter 7.
 
 - **Buys you:** predictions at any $x$, not just the measured ones.
 - **Costs:** if the assumed form is wrong, your predictions are wrong no
   matter how much data you collect.
+
+> **MVTec example:** the MVTec tile surfaces are flat and the lighting is
+> fixed, so Lambert's cosine law simplifies to $y = \alpha \cdot r + \beta$
+> — a linear relationship between true reflectance $r$ and pixel value $y$.
+> Fit $\alpha$ (lamp gain) and $\beta$ (dark current) from a set of
+> defect-free calibration patches using least-squares. Any patch whose
+> pixel values deviate significantly from this fitted model is flagged as
+> a defect. The model generalises across the whole surface — but only
+> because the flat-surface, fixed-lighting assumption holds. Change the
+> lamp angle or surface curvature and the calibration breaks.
 
 ### Attack 3 — Flexible learning (machine learning)
 
@@ -196,6 +363,16 @@ algorithm chooses the form from the space.
 - **Costs:** much more data, careful handling of overfitting, harder
   interpretation of the resulting model.
 
+> **MVTec example:** the Tile category contains five defect types —
+> cracks, glue strips, gray strokes, oil spots, and rough patches — each
+> with a different visual signature. No single parametric model covers
+> all of them. Instead, train a CNN on the labeled MVTec patches: the
+> network learns which combinations of local texture, edge, and contrast
+> cues predict *defective* — without anyone specifying those cues
+> explicitly. Attack 3 wins here because the variety of defect
+> appearances is too complex to write down as a formula, but the
+> patterns are learnable from data.
+
 Parts V (CNNs) and VI (attention, vision transformers, multimodal models)
 of this book develop Attack 3. They are, structurally, elaborate
 parametric-fitting problems — but with hypothesis classes flexible
@@ -205,29 +382,54 @@ enough to learn the form of $f$ rather than inherit it.
 
 ## 5. Three Attacks on the Same Data
 
-To make the three attacks tangible, simulate a small noisy dataset and
-attack it three ways:
+To make the three attacks tangible, consider a simple simulation. We
+invent a true underlying function:
+
+$$f(x) = 1 + 0.5x + 1.2\sin(1.5x)$$
+
+This is a mildly wavy curve — not a straight line, not wildly
+complicated. Think of it as the true reflectance profile of a surface as
+you slide a sensor across it. We then simulate 60 noisy measurements
+by sampling $x$ values uniformly between 0 and 6, computing the true
+$f(x)$ at each, and adding Gaussian noise:
+
+$$y_i = f(x_i) + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0,\ 0.4^2)$$
+
+In a real experiment $f$ would be unknown. Here we keep it visible
+(dashed green line) so you can see how well each attack recovers it.
 
 ![The same noisy dataset under three different attacks: averaging (a sharp point estimate at one x), linear fit (predicts everywhere but misses the wiggle), degree-10 polynomial (tracks the wiggle but risks overfitting).](ch00_three_attacks.png)
 
-What the three attacks tell us:
+What the figure shows:
 
-- **Attack 1 (averaging)** gives a very good value at one specific $x$ —
-  the error bar on the averaged estimate is tiny. But we have no idea
-  what $f$ does elsewhere.
-- **Attack 2 (linear fit)** predicts everywhere but misses the wiggle. If
-  we *knew* from physics that $f$ was linear, this would be the right
-  tool. Wrong assumption, wrong answer.
-- **Attack 3 (polynomial fit)** tracks the wiggle well. With less data or
-  a higher degree it would start fitting the noise instead of the
-  signal — the failure mode called **overfitting**. Controlling it is
-  half of what modern ML is about.
+- **Attack 1 (red dot)** — we pretend we can re-measure at $x = 3$
+  many times and average those readings. The estimate lands very close
+  to the true value at that one point, with a small error bar. But the
+  rest of the curve is completely unknown to us — we have no way to
+  predict $f$ at any other $x$.
+- **Attack 2 (blue line)** — we fit a straight line through all 60
+  measurements. It predicts everywhere but misses the wiggle entirely.
+  The assumed form (linear) is wrong, and no amount of extra data
+  fixes a wrong assumption.
+- **Attack 3 (purple curve)** — we fit a degree-10 polynomial, which is
+  flexible enough to track the wiggle. It follows the true curve
+  closely in the middle, though it starts to stray at the edges where
+  data is sparse. With even less data or a higher degree polynomial it
+  would start fitting the noise bumps rather than the true signal —
+  the failure mode called **overfitting**.
 
-**No attack is universally right.** The skill is picking the attack that
-matches what you know about your problem. In practice you often combine
-them — e.g. average noisy pixel values first (Attack 1), then fit a
-calibration curve to the averages (Attack 2), then use a neural network
-on the calibrated data (Attack 3).
+**No attack is universally right.** The skill is matching the attack to
+what you already know about your problem. In practice you often combine
+them — average noisy readings first (Attack 1), fit a calibration curve
+to the averages (Attack 2), then pass the calibrated data to a neural
+network (Attack 3).
+
+The mathematics behind each attack is built up across the book — why
+averaging reduces error in Attack 1 (Part I, probability), how the
+slope is derived from data in Attack 2 (Chapter 7, maximum likelihood),
+and how overfitting is detected and controlled in Attack 3 (Chapter 12,
+training). Each concept is introduced only when the tools to explain it
+properly are in place.
 
 ---
 
@@ -291,15 +493,6 @@ backtrack to prerequisite chapters as needed.
 Good if: you have a specific goal in mind and your foundations are already
 solid.
 
-### When to read the sibling `nn-basics` notebooks
-
-For any chapter that involves *training* a model from scratch, there is a
-matching drafting notebook in
-[`~/projects/nn-basics/fundamentals/`](../../../nn-basics/fundamentals/README.md).
-Those notebooks are `.ipynb` format for interactive exploration — rerun
-cells, tweak hyperparameters, watch the loss curves. Use them as
-playgrounds for ideas the book describes statically.
-
 ### Reading checkpoints — the four big "aha" moments
 
 If you only get these four, the book has done its job:
@@ -327,6 +520,7 @@ If you only get these four, the book has done its job:
 | Attack 2 | Fit parameters inside a known functional form (regression) |
 | Attack 3 | Pick a flexible hypothesis class, let data choose the form (ML) |
 | Signals | Pixels, tokens, audio, video — the same math covers all |
+| Running example | MVTec AD Tile: filter/average (A1), fit Lambert calibration model (A2), train CNN on labeled patches (A3) |
 
 ---
 
