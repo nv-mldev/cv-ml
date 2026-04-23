@@ -87,7 +87,7 @@ But **natural images** occupy a tiny, thin slice of this space. Most points in $
 
 This is the **manifold hypothesis**, and it explains why learned features work: CNNs learn to map the high-dimensional pixel space to a lower-dimensional representation that captures where you are on the natural image manifold — not where you are in the raw pixel cube.
 
-> **Simulation:** `tutorials/01b_linear_algebra_for_matching/`
+> **Simulation:** `~/projects/cv-ml/math/linear_algebra/`
 > — All 4 parts: vectors and dot product → norms and similarity → orthogonality → transforms.
 
 ---

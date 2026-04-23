@@ -79,7 +79,7 @@ cv-ml/
 ├── pyproject.toml                         ← uv dependencies
 ├── math/
 │   ├── probability/                       ← Part I — probability (complete)
-│   ├── linear_algebra/                    ← Part I — planned
+│   ├── linear_algebra/                    ← Part I — linear algebra (complete)
 │   └── optimization/                      ← Part I — planned
 └── book/
     ├── figures/                           ← all static figures
@@ -119,7 +119,7 @@ myst build --html
 | Part | Status |
 |------|--------|
 | Part I — Probability | ✅ complete (part0–part6 + exercises) |
-| Part I — Linear Algebra | ⏳ planned (moving from `cnn/tutorials/01b_*`) |
+| Part I — Linear Algebra | ✅ complete (part1–part4 + exercises) |
 | Part I — Optimization | ⏳ planned |
 | Part II — Signals and Measurement | 🟢 chapters drafted (ch01–ch05) |
 | Part III — Why Raw Signals Fail | 🟢 ch06 drafted |

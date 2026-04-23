@@ -13,15 +13,25 @@ project:
 
     - title: "Part I — Math Foundations"
       children:
-        - file: math/probability/README.md
-        - file: math/probability/part0_what_is_a_distribution.md
-        - file: math/probability/part1_bernoulli.md
-        - file: math/probability/part2_binomial.md
-        - file: math/probability/part3_poisson.md
-        - file: math/probability/part4_normal.md
-        - file: math/probability/part5_clt.md
-        - file: math/probability/part6_putting_it_together.md
-        - file: math/probability/exercises.md
+        - title: "Probability"
+          children:
+            - file: math/probability/README.md
+            - file: math/probability/part0_what_is_a_distribution.md
+            - file: math/probability/part1_bernoulli.md
+            - file: math/probability/part2_binomial.md
+            - file: math/probability/part3_poisson.md
+            - file: math/probability/part4_normal.md
+            - file: math/probability/part5_clt.md
+            - file: math/probability/part6_putting_it_together.md
+            - file: math/probability/exercises.md
+        - title: "Linear Algebra"
+          children:
+            - file: math/linear_algebra/README.md
+            - file: math/linear_algebra/part1_vectors_and_dot_product.md
+            - file: math/linear_algebra/part2_norms_and_similarity.md
+            - file: math/linear_algebra/part3_orthogonality_and_projection.md
+            - file: math/linear_algebra/part4_linear_transforms.md
+            - file: math/linear_algebra/exercises.md
 
     - title: "Part II — Signals and Measurement"
       children:
