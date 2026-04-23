@@ -11,6 +11,10 @@ project:
   toc:
     - file: README.md
 
+    - title: "Chapter 0 — Introduction"
+      children:
+        - file: book/ch00_introduction/ch00_introduction.md
+
     - title: "Part I — Math Foundations"
       children:
         - title: "Probability"

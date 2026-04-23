@@ -18,6 +18,16 @@ holds Parts II through VI — the applied material that builds on top.
 
 ## Table of Contents
 
+### Chapter 0 — Introduction
+*Why this book exists: measurement noise, the inverse problem, three
+attacks, the path from signals to transformers.*
+
+| Chapter | Title | Key question answered |
+|---------|-------|-----------------------|
+| [0](ch00_introduction/) | From Measurements to Meaning | Why does ML exist at all, what problem is it solving, and how does it relate to classical signal processing? |
+
+---
+
 ### Part I — Math Foundations
 *(Lives in [`../math/`](../math/) — probability, linear algebra, optimization.)*
 Start here if you need the math before the signal processing. Cross-referenced
@@ -105,13 +115,17 @@ uv run python math/probability/part4_normal.py
 ## Dependency graph
 
 ```
-Ch 1 (Digitisation)
-  └─► Ch 2 (Sensor)
-        └─► Ch 3 (Pixels)
-              └─► Ch 4 (Contrast)
-                    └─► Ch 5 (Colour)
-                          └─► Ch 6 (Why Raw Signals Fail)
-                                ├─► Ch 7 (Probability)     ← deepens Ch 2 noise model
-                                ├─► Ch 8 (Linear Algebra)  ← deepens Ch 6 matching
-                                └─► Ch 9–15 (Features → Transformers → VLMs)
+Ch 0 (Introduction — measurements, noise, inverse problem)
+  │
+  ├─ [optional detour] Part I — Math Foundations (probability, linalg)
+  │
+  └─► Ch 1 (Digitisation)
+        └─► Ch 2 (Sensor)
+              └─► Ch 3 (Pixels)
+                    └─► Ch 4 (Contrast)
+                          └─► Ch 5 (Colour)
+                                └─► Ch 6 (Why Raw Signals Fail)
+                                      ├─► Ch 7 (Probability)     ← deepens Ch 2 noise model
+                                      ├─► Ch 8 (Linear Algebra)  ← deepens Ch 6 matching
+                                      └─► Ch 9–15 (Features → Transformers → VLMs)
 ```
