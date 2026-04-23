@@ -1,0 +1,57 @@
+version: 1
+project:
+  title: Signals to Transformers
+  subtitle: Math and Machine Learning Foundations from Measurement to Multimodal AI
+  authors:
+    - name: Nithin Vadekkapat
+  license:
+    code: MIT
+    content: CC-BY-4.0
+  github: ""
+  toc:
+    - file: README.md
+
+    - title: "Part I — Math Foundations"
+      children:
+        - file: math/probability/README.md
+        - file: math/probability/part0_what_is_a_distribution.md
+        - file: math/probability/part1_bernoulli.md
+        - file: math/probability/part2_binomial.md
+        - file: math/probability/part3_poisson.md
+        - file: math/probability/part4_normal.md
+        - file: math/probability/part5_clt.md
+        - file: math/probability/part6_putting_it_together.md
+        - file: math/probability/exercises.md
+
+    - title: "Part II — Signals and Measurement"
+      children:
+        - file: book/part2_signals_and_measurement/ch01_digitisation/ch01_digitisation.md
+        - file: book/part2_signals_and_measurement/ch02_sensor/ch02_sensor.md
+        - file: book/part2_signals_and_measurement/ch03_pixels/ch03_pixels.md
+        - file: book/part2_signals_and_measurement/ch04_contrast/ch04_contrast.md
+        - file: book/part2_signals_and_measurement/ch05_colour/ch05_colour.md
+
+    - title: "Part III — Why Raw Signals Fail"
+      children:
+        - file: book/part3_why_raw_signals_fail/ch06_pixel_problems/ch06_pixel_problems.md
+
+    - title: "Part IV — The Math You Need"
+      children:
+        - file: book/part4_the_math/ch07_probability/ch07_probability.md
+        - file: book/part4_the_math/ch08_linear_algebra/ch08_linear_algebra.md
+
+    - title: "Part V — Learning from Signals"
+      children:
+        - file: book/part5_learning_from_signals/ch09_convolutions/ch09_convolutions.md
+        - file: book/part5_learning_from_signals/ch10_backprop/ch10_backprop.md
+        - file: book/part5_learning_from_signals/ch11_cnns/ch11_cnns.md
+        - file: book/part5_learning_from_signals/ch12_training/ch12_training.md
+
+    - title: "Part VI — Attention and Beyond"
+      children:
+        - file: book/part6_attention_and_beyond/ch13_attention/ch13_attention.md
+        - file: book/part6_attention_and_beyond/ch14_vit/ch14_vit.md
+        - file: book/part6_attention_and_beyond/ch15_vlm/ch15_vlm.md
+
+site:
+  template: book-theme
