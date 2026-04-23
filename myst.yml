@@ -36,6 +36,24 @@ project:
             - file: math/linear_algebra/part3_orthogonality_and_projection.md
             - file: math/linear_algebra/part4_linear_transforms.md
             - file: math/linear_algebra/exercises.md
+        - title: "Statistics"
+          children:
+            - file: math/statistics/README.md
+            - file: math/statistics/ch01_eda.md
+            - file: math/statistics/ch02_distributions.md
+            - file: math/statistics/ch03_pmf.md
+            - file: math/statistics/ch04_cdf.md
+            - file: math/statistics/ch05_modeling.md
+            - file: math/statistics/ch06_pdf.md
+            - file: math/statistics/ch07_relationships.md
+            - file: math/statistics/ch08_estimation.md
+            - file: math/statistics/ch09_hypothesis_testing.md
+            - file: math/statistics/ch10_least_squares.md
+            - file: math/statistics/ch11_regression.md
+            - file: math/statistics/ch12_time_series.md
+            - file: math/statistics/ch13_survival.md
+            - file: math/statistics/ch14_analytic_methods.md
+            - file: math/statistics/exercises.md
 
     - title: "Part II — Signals and Measurement"
       children:

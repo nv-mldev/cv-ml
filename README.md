@@ -80,6 +80,7 @@ cv-ml/
 ├── math/
 │   ├── probability/                       ← Part I — probability (complete)
 │   ├── linear_algebra/                    ← Part I — linear algebra (complete)
+│   ├── statistics/                        ← Part I — statistics (complete)
 │   └── optimization/                      ← Part I — planned
 └── book/
     ├── figures/                           ← all static figures
@@ -120,6 +121,7 @@ myst build --html
 |------|--------|
 | Part I — Probability | ✅ complete (part0–part6 + exercises) |
 | Part I — Linear Algebra | ✅ complete (part1–part4 + exercises) |
+| Part I — Statistics | ✅ complete (ch01–ch14 + exercises) |
 | Part I — Optimization | ⏳ planned |
 | Part II — Signals and Measurement | 🟢 chapters drafted (ch01–ch05) |
 | Part III — Why Raw Signals Fail | 🟢 ch06 drafted |
