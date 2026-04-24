@@ -17,30 +17,28 @@ project:
 
     - title: "Part I — Math Foundations"
       children:
-        - title: "Probability"
+        - file: math/README.md
+
+        - title: "Level 1 — Foundations (interleaved prob ↔ stats)"
           children:
             - file: math/probability/README.md
             - file: math/probability/part0_what_is_a_distribution.md
             - file: math/probability/part1_bernoulli.md
+            - file: math/statistics/README.md
+            - file: math/statistics/ch01_eda.md
+            - file: math/statistics/ch02_distributions.md
+
+        - title: "Level 2 — Distributions (probability deep dive)"
+          children:
             - file: math/probability/part2_binomial.md
             - file: math/probability/part3_poisson.md
             - file: math/probability/part4_normal.md
             - file: math/probability/part5_clt.md
             - file: math/probability/part6_putting_it_together.md
             - file: math/probability/exercises.md
-        - title: "Linear Algebra"
+
+        - title: "Level 3 — Inference (statistics deep dive)"
           children:
-            - file: math/linear_algebra/README.md
-            - file: math/linear_algebra/part1_vectors_and_dot_product.md
-            - file: math/linear_algebra/part2_norms_and_similarity.md
-            - file: math/linear_algebra/part3_orthogonality_and_projection.md
-            - file: math/linear_algebra/part4_linear_transforms.md
-            - file: math/linear_algebra/exercises.md
-        - title: "Statistics"
-          children:
-            - file: math/statistics/README.md
-            - file: math/statistics/ch01_eda.md
-            - file: math/statistics/ch02_distributions.md
             - file: math/statistics/ch03_pmf.md
             - file: math/statistics/ch04_cdf.md
             - file: math/statistics/ch05_modeling.md
@@ -54,6 +52,15 @@ project:
             - file: math/statistics/ch13_survival.md
             - file: math/statistics/ch14_analytic_methods.md
             - file: math/statistics/exercises.md
+
+        - title: "Linear Algebra (independent track)"
+          children:
+            - file: math/linear_algebra/README.md
+            - file: math/linear_algebra/part1_vectors_and_dot_product.md
+            - file: math/linear_algebra/part2_norms_and_similarity.md
+            - file: math/linear_algebra/part3_orthogonality_and_projection.md
+            - file: math/linear_algebra/part4_linear_transforms.md
+            - file: math/linear_algebra/exercises.md
 
     - title: "Part II — Signals and Measurement"
       children:
