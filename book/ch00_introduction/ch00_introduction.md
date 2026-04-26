@@ -1,28 +1,5 @@
 # 0 — From Measurements to Meaning
 
-## Why This Book Exists
-
-This book is about one problem, stated many ways:
-
-- How do we recover the true value of something when our measurements of
-  it are noisy?
-- How do we extract *meaning* from raw sensor readings?
-- How do we turn a grid of pixels into a decision: *what is this?*
-- How do we train a model that generalizes from examples it has seen to
-  data it hasn't?
-
-These are all the same problem. It is called the **inverse problem** — given
-the effects (measurements), recover the causes (the underlying truth). It
-is arguably the central problem of empirical science and engineering.
-
-The three major approaches to attacking it — classical signal processing,
-parametric model fitting, and flexible machine learning — define the
-structure of this book. By the end, you will know when to reach for each,
-and why modern computer vision and multimodal AI lean so hard on the
-third.
-
----
-
 ## 1. The Clean World
 
 Forget models for a moment. You are an engineer with a sensor.
@@ -81,7 +58,112 @@ ax.legend()
 
 ---
 
-## 2. Noise Enters
+## 2. Modelling the World
+
+Look back at what we just did. We pointed at "a thermometer in a room"
+and wrote $y = f(x)$. The room is not an equation. The thermometer is
+not an equation. We *replaced* a physical situation with a symbolic
+stand-in — a few letters and an equals sign — and then promised
+ourselves we'd do all our reasoning inside the symbols.
+
+That swap has a name. It is called **mathematical modelling**, and it
+is the move that makes engineering and science possible. You cannot
+compute on a room. You can compute on $y = f(x)$. Every prediction
+ever made — by a calibration curve, by a Kalman filter, by GPT-5 — is a
+calculation performed *inside a model* and then projected back onto the
+world.
+
+### A worked example: a falling ball
+
+Drop a ball from a height $h_0$. We want to know how high it is at
+time $t$. From classical mechanics, with gravity $g \approx 9.81 \,
+\text{m/s}^2$:
+
+$$
+h(t) = h_0 - \tfrac{1}{2} g t^2
+$$
+
+That single line is a model. It compresses the entire physical situation
+into:
+
+- **A variable** we control or observe: $t$ (time since release).
+- **A variable** we want to predict: $h$ (height).
+- **Parameters**: $h_0$ (release height) and $g$ (gravitational
+  acceleration).
+- **A functional form**: a downward parabola.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+g = 9.81                                  # m/s^2
+h0 = 10.0                                 # release height in metres
+t = np.linspace(0, np.sqrt(2 * h0 / g), 200)
+h = h0 - 0.5 * g * t**2
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(t, h, linewidth=2.5)
+ax.set_xlabel('time t (seconds)')
+ax.set_ylabel('height h (metres)')
+ax.set_title('A model of a falling ball: h(t) = h₀ − ½ g t²')
+ax.grid(True, alpha=0.3)
+```
+
+What does the model *give* you?
+
+- **Predictions at unseen $t$.** You never measured $t = 0.7\,\text{s}$,
+  but the model tells you the ball is at $h_0 - \tfrac{1}{2} g (0.7)^2$
+  metres. This is the whole point: a model lets a finite act of
+  understanding cover infinite cases.
+- **A place to plug data in.** If you don't know $h_0$ exactly, you can
+  *measure a few heights at known times* and fit $h_0$ to the data. The
+  model has turned a physics question into an arithmetic one.
+- **A vocabulary for arguing.** "Did the ball fall faster than expected?"
+  is now answerable: compare measurements to $h(t)$ and look at the
+  residual.
+
+### What this model throws away
+
+Every model is a deliberate lie. This one is missing:
+
+- **Air resistance** — real balls slow down; the model doesn't.
+- **The ball's shape, mass, and spin** — none appear in the equation.
+- **The Earth's curvature and the variation of $g$ with altitude** —
+  $g$ is treated as a constant.
+- **The fact that "height" is measured relative to *something*** — the
+  ground, the release point, sea level — and that choice matters when
+  you compare to data.
+
+These omissions are *not bugs*. They are the model's whole point.
+Including everything would give you back the world, which is precisely
+what you were trying to escape. The skill is throwing away the things
+that don't matter for the question you're asking.
+
+> "All models are wrong; some are useful." — George Box
+>
+> A model isn't judged by whether it is true. It is judged by whether
+> predictions made through it survive contact with new data.
+
+### Why this matters for the rest of the book
+
+Everything in computer vision and machine learning is a model of
+something:
+
+- A pinhole-camera equation is a model of how light becomes pixels.
+- A Gaussian distribution is a model of how noise behaves.
+- A convolutional network is a model of how local image patterns
+  combine into objects.
+- A transformer is a model of how tokens depend on each other.
+
+You will spend the rest of the book learning *which models work for
+which questions*, and what each one quietly throws away. The clean
+world of §1 is the easy case where the model holds perfectly. The next
+section is what happens when you actually run an experiment and the
+model and the world stop agreeing.
+
+---
+
+## 3. Noise Enters
 
 Real sensors don't give you $f(x)$. They give you
 $f(x) + \text{garbage}$. The garbage has physical origins:
@@ -185,9 +267,9 @@ algorithms that work on average. The mathematical name for this is
 
 ---
 
-## 3. Why Is the Noise Gaussian?
+## 4. Why Is the Noise Gaussian?
 
-Look at the histogram in Section 2. That bell shape isn't coincidence. In
+Look at the histogram in §3. That bell shape isn't coincidence. In
 physics and engineering, measurement noise is **overwhelmingly Gaussian**,
 and there is a deep reason: the **Central Limit Theorem (CLT)**.
 
@@ -234,14 +316,27 @@ for ax, K in zip(axes, K_values):
 > your probability is rusty or if you want the derivations, read that
 > first. If you trust the intuition above for now, continue.
 
-The practical payoff arrives in Chapter 7 (Part IV), where we build on
-this intuition to derive least-squares fitting as maximum likelihood
-under Gaussian noise — a rigorous justification for why so many
-algorithms in CV and ML use squared-error losses.
+The practical payoff arrives in [Part I — Least Squares](../../math/statistics/ch10_least_squares.md),
+where we build on this intuition to derive least-squares fitting as
+maximum likelihood under Gaussian noise — a rigorous justification for
+why so many algorithms in CV and ML use squared-error losses.
 
 ---
 
-## 4. The Inverse Problem — Three Attacks
+## 5. The Inverse Problem — Three Attacks
+
+§2 introduced modelling and §3–§4 explained where noise comes from and
+why it tends to be Gaussian. Putting the two together gives the
+**measurement model** that underlies most of this book:
+
+$$
+y = f(x) + \epsilon
+$$
+
+— a clean signal $f(x)$ plus a random perturbation $\epsilon$. The three
+"attacks" below are not three different ways of looking at the world.
+They are three different ways of **building $f$** — three choices for
+how much structure you commit to before the data arrives.
 
 Now we can state the general problem clearly.
 
@@ -380,7 +475,7 @@ enough to learn the form of $f$ rather than inherit it.
 
 ---
 
-## 5. Three Attacks on the Same Data
+## 6. Three Attacks on the Same Data
 
 To make the three attacks tangible, consider a simple simulation. We
 invent a true underlying function:
@@ -433,7 +528,7 @@ properly are in place.
 
 ---
 
-## 6. From 1D Signals to Images to Multimodal AI
+## 7. From 1D Signals to Images to Multimodal AI
 
 Everything above used a scalar input $x$. Real problems are almost
 always higher-dimensional:
@@ -466,46 +561,98 @@ the same inverse problem — they just work in different signal spaces.
 
 ---
 
-## 7. How to Read This Book
+## 8. Signal Processing vs. Parametric Fitting vs. Machine Learning
 
-You don't have to read linearly. Three paths are supported:
+The three attacks all start from the same data $\{(x_i, y_i)\}$ and the same
+goal — recover something useful about $f$. What separates them is **how much
+you assume about $f$ before you look at the data**, and **what you get back
+in return**.
 
-### Path A — Top-to-bottom, math first
-If you want the mathematical foundations laid in properly before any
-applied content, read **Part I (Math Foundations)** in full, then Parts
-II–VI in order.
+| Dimension | Attack 1 — Signal Processing | Attack 2 — Parametric Fitting | Attack 3 — Machine Learning |
+|---|---|---|---|
+| **Prior assumption about $f$** | None about its form. Only that the signal is repeatable or locally smooth. | The functional form of $f$ is known from physics / domain knowledge. Only a few constants are unknown. | The form of $f$ is unknown. You only commit to a flexible *hypothesis class* (polynomials, kernels, neural nets). |
+| **What you choose** | A filter / averaging window | A small set of parameters $\theta$ (e.g. $\alpha, \beta$) | A hypothesis class + a learning algorithm |
+| **What you get back** | A denoised estimate at the $x$ values you measured | An equation $f(x; \theta)$ valid everywhere the assumed form holds | A learned function $\hat{f}$ that maps any $x$ to a prediction |
+| **Generalises to new $x$?** | No — only describes points you sampled | Yes — if the assumed form is correct | Yes — within the support of the training data |
+| **Data appetite** | Modest: many readings at the *same* $x$ | Modest: few readings, but spread across $x$ | Large: many diverse $(x, y)$ pairs |
+| **Main failure mode** | Over-smoothing destroys real edges / fine structure | Wrong functional form → systematically wrong predictions, no amount of data fixes it | Overfitting; poor extrapolation; opacity |
+| **What "fitting" means** | Choosing kernel width, cutoff frequency | Solving for $\theta$ that minimises a loss (e.g. least-squares) | Solving for millions of weights that minimise a loss |
+| **Typical tools** | Moving average, Gaussian blur, Wiener / Kalman filter, FFT | Linear regression, polynomial fit, exponential decay fit, calibration curves | CNNs, transformers, kernel methods, gradient boosting |
+| **Where taught** | Signals & systems / DSP courses | Classical statistics / regression courses | ML / deep learning courses |
+| **MVTec tile example** | Average frames + Gaussian blur to suppress sensor noise | Fit $y = \alpha r + \beta$ Lambert calibration; flag deviations as defects | Train a CNN on labelled defect patches across all five defect types |
 
-Good if: you've worked in engineering adjacent to CV but the probability
-/ linear algebra is rusty.
+### How they relate
 
-### Path B — Applied first, math as needed
-Start with **Part II (Signals and Measurement)**, work through the rest
-in order, and use Part I as a reference when the math gets too thin.
+These are not three disjoint worlds — they sit on a spectrum of how much
+structure you bring to the problem:
 
-Good if: you already know undergrad probability and linear algebra and
-want to get to CV fast.
+$$
+\underbrace{\text{Signal processing}}_{\text{no model of } f}
+\;\longrightarrow\;
+\underbrace{\text{Parametric fitting}}_{\text{narrow, fixed model of } f}
+\;\longrightarrow\;
+\underbrace{\text{Machine learning}}_{\text{wide, learned model of } f}
+$$
 
-### Path C — Target a specific chapter
-Every chapter lists its prerequisites up front. Jump to whatever you need
-(e.g. Chapter 13 on self-attention if that's why you're here) and
-backtrack to prerequisite chapters as needed.
+### What replaces the physics prior in ML?
 
-Good if: you have a specific goal in mind and your foundations are already
-solid.
+A natural question: parametric fitting commits to a specific equation
+($f(r) = \alpha r + \beta$, $f(t) = A e^{-\lambda t}$, etc.) handed down
+from physics. ML doesn't. So what *is* its prior? It can't be "anything
+goes" — that would never generalise.
 
-### Reading checkpoints — the four big "aha" moments
+The answer is that ML replaces the **physics prior** with a much weaker
+**smoothness / regularity prior**: nearby inputs should produce nearby
+outputs, $f$ shouldn't wiggle wildly, the function should have some kind
+of structure that lets it be described by far fewer numbers than the
+training set contains.
 
-If you only get these four, the book has done its job:
+Different ML models encode this weak prior in different ways:
 
-1. **Why squared-error is special** — it's the maximum-likelihood estimator
-   under Gaussian noise (Chapter 7).
-2. **Why linear algebra underlies every vision operation** — image
-   comparison, matching, features, and attention all reduce to dot
-   products and projections (Chapter 8).
-3. **Why convolutions work for images** — weight sharing over a
-   translation-invariant domain (Chapter 9).
-4. **Why attention works for everything else** — dynamic, data-dependent
-   aggregation without baked-in geometry (Chapter 13).
+| Model | Implicit prior on $f$ |
+|---|---|
+| Polynomial regression (degree $d$) | $f$ has bounded curvature up to order $d$ |
+| Kernel methods (RBF, Gaussian process) | Nearby $x$ → nearby $f(x)$, controlled by a length-scale |
+| CNN | Local patterns + translation invariance + hierarchical composition |
+| Transformer | Long-range dependencies + permutation-equivariance over tokens |
+| Neural net (generic) | Compositional smoothness — small change in $x$ usually means small change in $f$ |
+
+So the contrast between Attack 2 and Attack 3 is really about **where the
+information lives**:
+
+- **Attack 2 puts most of its information in the *form*.** Physics tells
+  you $f$ is a line, so all the data has to do is pin down two numbers.
+  Tiny hypothesis class, little data needed — but if the form is wrong,
+  the model fails silently no matter how much data you collect.
+- **Attack 3 puts most of its information in the *data*.** The hypothesis
+  class is vast (millions of weights), and the only built-in prior is
+  smoothness or structural symmetry. The data is what selects the actual
+  shape of $f$ from that huge space — which is why ML is so
+  data-hungry.
+
+This is also why **regularisation** matters in ML but barely appears in
+parametric fitting: when your hypothesis class is small and physics-shaped,
+the form itself is the regulariser. When the class is huge, you need
+explicit pressure (weight decay, dropout, early stopping, data augmentation)
+to keep the model inside the smooth, well-behaved region of the space.
+
+A few useful observations the table doesn't show directly:
+
+- **Attack 2 and Attack 3 share the same machinery.** Both pick a hypothesis
+  class and minimise a loss. Linear regression is just Attack 3 with a
+  hypothesis class of size one (lines). A neural network is just Attack 2
+  with a hypothesis class wide enough to learn the form of $f$. This is why
+  linear regression appears in both statistics *and* ML courses — it is the
+  bridge between them.
+- **The boundary between Attack 1 and Attack 2 is not airtight.** Kalman
+  filtering, AR / ARMA modelling, and system identification are
+  signal-processing methods that internally fit parameters of an assumed
+  state-space or autoregressive model. The split here is pedagogical, not
+  taxonomic — it keeps the three *premises* clearly separate for a learner.
+- **In practice you chain them.** Average noisy readings (A1), fit a
+  calibration curve to the averages (A2), then feed the calibrated data
+  into a neural network (A3). Real pipelines almost always combine all
+  three.
 
 ---
 
@@ -519,6 +666,7 @@ If you only get these four, the book has done its job:
 | Attack 1 | Average / filter at known $x$ values (signal processing) |
 | Attack 2 | Fit parameters inside a known functional form (regression) |
 | Attack 3 | Pick a flexible hypothesis class, let data choose the form (ML) |
+| Three-attack split | By *premise* and *output*, not by which course teaches them |
 | Signals | Pixels, tokens, audio, video — the same math covers all |
 | Running example | MVTec AD Tile: filter/average (A1), fit Lambert calibration model (A2), train CNN on labeled patches (A3) |
 

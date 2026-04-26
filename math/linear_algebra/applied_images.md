@@ -1,11 +1,12 @@
-# Chapter 8 — Linear Algebra for Images
-### Images as Vectors, Patches as Points
+# Linear Algebra Applied — Images as Vectors, Patches as Points
 
-> *Chapter 6 introduced L2 normalisation and mean subtraction as tools for invariant matching. This chapter explains the geometry behind those operations — and reveals that Pearson correlation is just a dot product between unit-mean vectors.*
+> *Chapter 6 (Part III) introduced L2 normalisation and mean subtraction as tools for invariant matching. This page closes the linear algebra track of Part I by explaining the geometry behind those operations — and reveals that Pearson correlation is just a dot product between unit-mean vectors.*
+
+> *This is the applied capstone of the [linear algebra series](README.md). The simulation-first build-up across `part1`–`part4` is what this page summarises and applies to image-patch comparison.*
 
 ---
 
-## 8.1 An Image Patch Is a Vector
+## 1. An Image Patch Is a Vector
 
 A $3 \times 3$ grayscale patch has 9 pixel values. Unroll them into a column vector:
 
@@ -17,7 +18,7 @@ For an $m \times n$ patch: $\mathbf{x} \in \mathbb{R}^{mn}$. High-resolution pat
 
 ---
 
-## 8.2 Dot Product — Measuring Agreement
+## 2. Dot Product — Measuring Agreement
 
 $$\mathbf{x} \cdot \mathbf{y} = \sum_i x_i y_i = \|\mathbf{x}\| \|\mathbf{y}\| \cos\theta$$
 
@@ -25,7 +26,7 @@ The dot product measures pixel-by-pixel agreement. But it depends on the magnitu
 
 ---
 
-## 8.3 L2 Norm and Unit Vectors
+## 3. L2 Norm and Unit Vectors
 
 $$\|\mathbf{x}\| = \sqrt{\sum_i x_i^2}$$
 
@@ -41,7 +42,7 @@ This is the geometric interpretation of L2 normalisation from Chapter 6.
 
 ---
 
-## 8.4 Mean Subtraction — Projecting Out the Brightness Direction
+## 4. Mean Subtraction — Projecting Out the Brightness Direction
 
 The vector $\mathbf{1} = [1, 1, \ldots, 1]^\top$ points in the "uniform brightness" direction. Projecting $\mathbf{x}$ onto $\mathbf{1}$ gives the mean; subtracting it removes the mean:
 
@@ -53,7 +54,7 @@ After mean subtraction, the dot product is unaffected by uniform brightness chan
 
 ---
 
-## 8.5 Pearson Correlation = Cosine of Mean-Subtracted Vectors
+## 5. Pearson Correlation = Cosine of Mean-Subtracted Vectors
 
 Combine both operations:
 
@@ -67,7 +68,7 @@ This geometric view makes the invariance obvious — and makes the ceiling obvio
 
 ---
 
-## 8.6 Orthogonality and Transforms
+## 6. Orthogonality and Transforms
 
 Two vectors are **orthogonal** when $\mathbf{x} \cdot \mathbf{y} = 0$ — they are geometrically perpendicular, carrying completely independent information.
 
@@ -79,7 +80,7 @@ The Fourier transform is an orthogonal transform — it decomposes an image into
 
 ---
 
-## 8.7 The Manifold Hypothesis — Why High-Dimensional Pixel Space Is Nearly Empty
+## 7. The Manifold Hypothesis — Why High-Dimensional Pixel Space Is Nearly Empty
 
 An $m \times n$ image is a point in $\mathbb{R}^{mn}$. For a $64 \times 64$ image that is $\mathbb{R}^{4096}$. The number of possible images is $256^{4096}$ — astronomically large.
 
@@ -87,8 +88,7 @@ But **natural images** occupy a tiny, thin slice of this space. Most points in $
 
 This is the **manifold hypothesis**, and it explains why learned features work: CNNs learn to map the high-dimensional pixel space to a lower-dimensional representation that captures where you are on the natural image manifold — not where you are in the raw pixel cube.
 
-> **Simulation:** `~/projects/cv-ml/math/linear_algebra/`
-> — All 4 parts: vectors and dot product → norms and similarity → orthogonality → transforms.
+> **Simulation:** the [linear algebra series](README.md) — `part1` through `part4` — develops every step on this page from scratch with vector/matrix code. Read those first if you want the build-up; this page is the destination.
 
 ---
 
@@ -106,4 +106,4 @@ This is the **manifold hypothesis**, and it explains why learned features work: 
 
 ---
 
-**Next →** [Chapter 9 — Convolutions and Filtering](../../part5_learning_from_signals/ch09_convolutions/README.md): Part V begins — moving from comparing patches to learning features that are invariant to spatial transforms.
+**Next →** [Chapter 9 — Convolutions and Filtering](../../book/part5_learning_from_signals/ch09_convolutions/ch09_convolutions.md): we move from comparing patches to learning features that are invariant to spatial transforms.

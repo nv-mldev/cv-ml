@@ -1,5 +1,7 @@
 # Signals to Transformers
 
+![Signals to Transformers — book cover](book/figures/cover.jpg)
+
 **Math and Machine Learning Foundations from Measurement to Multimodal AI.**
 
 A single long-form book written for practitioners who want to understand
@@ -27,9 +29,11 @@ book treats them that way from chapter 1.
 ## Structure
 
 ### Part I — Math Foundations
-Probability, linear algebra, and optimization built from scratch with CV
-examples on every page. Start here if you need the math before the signal
-processing.
+Probability, linear algebra, and optimization built from scratch,
+**simulation-first**: every concept is grounded in a Monte Carlo or
+vector-space experiment before the math appears. Each track ends with an
+applied capstone (sensor noise model; image patches as vectors). Start
+here if you need the math before the signal processing.
 
 ### Part II — Signals and Measurement
 How a continuous scene becomes a digital array. Sampling, Nyquist,
@@ -39,14 +43,10 @@ sensors, pixels, contrast, colour.
 What goes wrong when you try to do anything useful with raw pixels —
 motivates the entire rest of the book.
 
-### Part IV — The Math You Need (applied)
-Probability and linear algebra re-contextualised for the CV / ML setting.
-Bridges the foundations (Part I) to the architectures (Parts V–VI).
-
-### Part V — Learning from Signals
+### Part IV — Learning from Signals
 Convolutions, backprop, CNNs, training dynamics.
 
-### Part VI — Attention and Beyond
+### Part V — Attention and Beyond
 Self-attention, transformers, vision transformers, vision-language models,
 multimodal AI — where the field is going.
 
@@ -86,10 +86,14 @@ cv-ml/
     ├── figures/                           ← all static figures
     ├── part2_signals_and_measurement/     ← Part II
     ├── part3_why_raw_signals_fail/        ← Part III
-    ├── part4_the_math/                    ← Part IV
-    ├── part5_learning_from_signals/       ← Part V
-    └── part6_attention_and_beyond/        ← Part VI
+    ├── part5_learning_from_signals/       ← Part IV
+    └── part6_attention_and_beyond/        ← Part V
 ```
+
+> Directory names retain their original `partN_*` prefix to keep git
+> history stable; the *displayed* part numbers in the rendered book
+> follow the renumbered TOC (Part IV = Learning from Signals, Part V =
+> Attention).
 
 ## Running the code
 
@@ -119,15 +123,14 @@ myst build --html
 
 | Part | Status |
 |------|--------|
-| Part I — Probability | ✅ complete (part0–part6 + exercises) |
-| Part I — Linear Algebra | ✅ complete (part1–part4 + exercises) |
+| Part I — Probability | ✅ complete (part0–part6 + exercises + applied capstone) |
+| Part I — Linear Algebra | ✅ complete (part1–part4 + exercises + applied capstone) |
 | Part I — Statistics | ✅ complete (ch01–ch14 + exercises) |
 | Part I — Optimization | ⏳ planned |
 | Part II — Signals and Measurement | 🟢 chapters drafted (ch01–ch05) |
 | Part III — Why Raw Signals Fail | 🟢 ch06 drafted |
-| Part IV — The Math You Need | 🟢 ch07–ch08 drafted |
-| Part V — Learning from Signals | 🟡 chapter scaffolding (ch09–ch12) |
-| Part VI — Attention and Beyond | 🟡 chapter scaffolding (ch13–ch15) |
+| Part IV — Learning from Signals | 🟡 chapter scaffolding (ch09–ch12) |
+| Part V — Attention and Beyond | 🟡 chapter scaffolding (ch13–ch15) |
 
 ## License
 
