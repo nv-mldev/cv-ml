@@ -59,8 +59,8 @@ Image patch
 
 ## Who links here
 
-- `cv-ml/book/part4_the_math/ch08_linear_algebra/ch08_linear_algebra.md`
-  will cite this series once chapter 8 is updated to reference the new
-  location.
+- [`applied_images.md`](applied_images.md) — the applied capstone of
+  this series; treats image patches as vectors and derives the geometric
+  meaning of L2 normalisation, mean subtraction, and Pearson correlation.
 - `nn-basics/fundamentals/math_concepts.ipynb` §3 (Dot Products and Matrix
   Algebra) links here for the deep dive.

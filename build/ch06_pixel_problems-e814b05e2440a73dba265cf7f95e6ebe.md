@@ -107,4 +107,11 @@ This transition — from pixels to features — is the subject of Parts IV and V
 
 ---
 
-**Next →** [Chapter 7 — Probability for Sensors](../../part4_the_math/ch07_probability/README.md): Part IV provides the mathematical foundations that underpin the noise model (Chapter 2) and the normalisation theory (Chapter 6) at a deeper level.
+**Next →** [Chapter 9 — Convolutions and Filtering](../../part5_learning_from_signals/ch09_convolutions/ch09_convolutions.md): Part IV begins — moving from comparing patches to learning features that are invariant to spatial transforms.
+
+> **Want the math first?** Two applied capstones in Part I deepen the
+> material from Chapters 2 and 6:
+> - [`probability/applied_sensors.md`](../../../math/probability/applied_sensors.md) —
+>   derives the sensor noise model from Bernoulli → Binomial → Poisson → Normal → CLT.
+> - [`linear_algebra/applied_images.md`](../../../math/linear_algebra/applied_images.md) —
+>   the geometry behind L2 normalisation, mean subtraction, and Pearson correlation.

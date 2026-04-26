@@ -8,6 +8,12 @@
     <loc>http://localhost:3000/readme</loc>
   </url>
   <url>
+    <loc>http://localhost:3000/preface</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/contents</loc>
+  </url>
+  <url>
     <loc>http://localhost:3000/ch00-introduction</loc>
   </url>
   <url>
@@ -48,6 +54,15 @@
   </url>
   <url>
     <loc>http://localhost:3000/exercises</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/applied-sensors</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/aside-high-dim-distributions</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/stochastic-processes</loc>
   </url>
   <url>
     <loc>http://localhost:3000/ch03-pmf</loc>
@@ -105,6 +120,9 @@
   </url>
   <url>
     <loc>http://localhost:3000/exercises-2</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/applied-images</loc>
   </url>
   <url>
     <loc>http://localhost:3000/ch01-digitisation</loc>
