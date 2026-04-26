@@ -5,13 +5,16 @@
     <loc>http://localhost:3000</loc>
   </url>
   <url>
-    <loc>http://localhost:3000/ch00-introduction</loc>
-  </url>
-  <url>
     <loc>http://localhost:3000/readme</loc>
   </url>
   <url>
+    <loc>http://localhost:3000/ch00-introduction</loc>
+  </url>
+  <url>
     <loc>http://localhost:3000/readme-1</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/readme-2</loc>
   </url>
   <url>
     <loc>http://localhost:3000/part0-what-is-a-distribution</loc>
@@ -20,7 +23,7 @@
     <loc>http://localhost:3000/part1-bernoulli</loc>
   </url>
   <url>
-    <loc>http://localhost:3000/readme-2</loc>
+    <loc>http://localhost:3000/readme-3</loc>
   </url>
   <url>
     <loc>http://localhost:3000/ch01-eda</loc>
@@ -86,7 +89,7 @@
     <loc>http://localhost:3000/exercises-1</loc>
   </url>
   <url>
-    <loc>http://localhost:3000/readme-3</loc>
+    <loc>http://localhost:3000/readme-4</loc>
   </url>
   <url>
     <loc>http://localhost:3000/part1-vectors-and-dot-product</loc>
@@ -120,12 +123,6 @@
   </url>
   <url>
     <loc>http://localhost:3000/ch06-pixel-problems</loc>
-  </url>
-  <url>
-    <loc>http://localhost:3000/ch07-probability</loc>
-  </url>
-  <url>
-    <loc>http://localhost:3000/ch08-linear-algebra</loc>
   </url>
   <url>
     <loc>http://localhost:3000/ch09-convolutions</loc>
