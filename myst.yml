@@ -1,15 +1,93 @@
 version: 1
 project:
+  id: signals-to-transformers
   title: Signals to Transformers
   subtitle: Math and Machine Learning Foundations from Measurement to Multimodal AI
+  short_title: Signals → Transformers
+  description: >-
+    A long-form book that runs from measurement physics and noise, through
+    classical signal processing, the math foundations (probability and
+    linear algebra), and into modern deep learning — CNNs, attention,
+    transformers, vision-language models, and multimodal AI.
+  keywords:
+    - computer vision
+    - machine learning
+    - signal processing
+    - probability
+    - linear algebra
+    - deep learning
+    - transformers
+    - vision-language models
+    - multimodal AI
   authors:
     - name: Nithin Vadekkapat
+      affiliations:
+        - DhvaniAI
   license:
     code: MIT
     content: CC-BY-4.0
-  github: ""
+  github: https://github.com/nv-mldev/cv-ml
+  banner: book/figures/cover.jpg
+  thumbnail: book/figures/cover.jpg
+  open_access: true
+
+  # Numbering — auto-numbered figures, equations, headings
+  numbering:
+    enumerator:
+      template: '{number}'
+    figure:
+      enabled: true
+    equation:
+      enabled: true
+    heading_2:
+      enabled: true
+
+  # Math macros — usable in any chapter without redefining \newcommand
+  math:
+    '\E': '\mathbb{E}'
+    '\Var': '\mathrm{Var}'
+    '\Cov': '\mathrm{Cov}'
+    '\R': '\mathbb{R}'
+    '\N': '\mathbb{N}'
+    '\Z': '\mathbb{Z}'
+    '\norm': '\left\| #1 \right\|'
+    '\abs': '\left| #1 \right|'
+    '\inner': '\left\langle #1 \right\rangle'
+    '\given': '\,\vert\,'
+    '\iid': '\overset{\text{iid}}{\sim}'
+    '\indep': '\perp\!\!\!\perp'
+    '\T': '^{\mathsf{T}}'
+    '\argmax': '\mathop{\mathrm{arg\,max}}'
+    '\argmin': '\mathop{\mathrm{arg\,min}}'
+
+  # Common abbreviations expand to their long form on hover
+  abbreviations:
+    CV: Computer Vision
+    ML: Machine Learning
+    DL: Deep Learning
+    SNR: Signal-to-Noise Ratio
+    PSF: Point Spread Function
+    CLT: Central Limit Theorem
+    MLE: Maximum Likelihood Estimation
+    MAP: Maximum A Posteriori
+    PMF: Probability Mass Function
+    PDF: Probability Density Function
+    CDF: Cumulative Distribution Function
+    CNN: Convolutional Neural Network
+    ViT: Vision Transformer
+    VLM: Vision-Language Model
+    OLPF: Optical Low-Pass Filter
+    ADC: Analog-to-Digital Converter
+    MVTec: MVTec Anomaly Detection (dataset)
+
   toc:
+    - file: book/front_matter/cover.md
+
     - file: README.md
+
+    - file: book/ch00_introduction/preface.md
+
+    - file: book/ch00_introduction/contents.md
 
     - title: "Chapter 0 — Introduction"
       children:
@@ -36,6 +114,9 @@ project:
             - file: math/probability/part5_clt.md
             - file: math/probability/part6_putting_it_together.md
             - file: math/probability/exercises.md
+            - file: math/probability/applied_sensors.md
+            - file: math/probability/aside_high_dim_distributions.md
+            - file: math/probability/stochastic_processes.md
 
         - title: "Level 3 — Inference (statistics deep dive)"
           children:
@@ -61,6 +142,7 @@ project:
             - file: math/linear_algebra/part3_orthogonality_and_projection.md
             - file: math/linear_algebra/part4_linear_transforms.md
             - file: math/linear_algebra/exercises.md
+            - file: math/linear_algebra/applied_images.md
 
     - title: "Part II — Signals and Measurement"
       children:
@@ -74,19 +156,14 @@ project:
       children:
         - file: book/part3_why_raw_signals_fail/ch06_pixel_problems/ch06_pixel_problems.md
 
-    - title: "Part IV — The Math You Need"
-      children:
-        - file: book/part4_the_math/ch07_probability/ch07_probability.md
-        - file: book/part4_the_math/ch08_linear_algebra/ch08_linear_algebra.md
-
-    - title: "Part V — Learning from Signals"
+    - title: "Part IV — Learning from Signals"
       children:
         - file: book/part5_learning_from_signals/ch09_convolutions/ch09_convolutions.md
         - file: book/part5_learning_from_signals/ch10_backprop/ch10_backprop.md
         - file: book/part5_learning_from_signals/ch11_cnns/ch11_cnns.md
         - file: book/part5_learning_from_signals/ch12_training/ch12_training.md
 
-    - title: "Part VI — Attention and Beyond"
+    - title: "Part V — Attention and Beyond"
       children:
         - file: book/part6_attention_and_beyond/ch13_attention/ch13_attention.md
         - file: book/part6_attention_and_beyond/ch14_vit/ch14_vit.md
@@ -94,3 +171,10 @@ project:
 
 site:
   template: book-theme
+  options:
+    favicon: book/figures/favicon.png
+    logo: book/figures/favicon.png
+    logo_text: Signals → Transformers
+    hide_outline: false
+    hide_toc: false
+    folders: false
