@@ -28,3 +28,8 @@ math/probability/manifold_interactive.html
 # Hatch / uv
 dist/
 build/
+
+# Node (MyST CLI install artifacts — MyST itself runs via the system binary)
+node_modules/
+package.json
+package-lock.json
