@@ -1,0 +1,72 @@
+# Signals to Transformers — house matplotlib style.
+# Use:  plt.style.use('book/figures/style.mplstyle')
+#
+# Palette is shared with the book cover and Mermaid diagrams:
+#   background  #F5F1E8  warm off-white
+#   body / line #1A1A1A  graphite
+#   primary     #2A3F8F  deep indigo
+#   accent      #C45A3A  rust orange
+#   support 1   #5B7553  sage green
+#   support 2   #8B6F47  warm tan
+
+# ── Figure ───────────────────────────────────────────────────────────────
+figure.facecolor:   F5F1E8
+figure.edgecolor:   F5F1E8
+figure.dpi:         110
+figure.figsize:     7.0, 4.2
+figure.titlesize:   13
+figure.titleweight: regular
+
+# ── Axes ─────────────────────────────────────────────────────────────────
+axes.facecolor:     F5F1E8
+axes.edgecolor:     1A1A1A
+axes.linewidth:     0.9
+axes.labelcolor:    1A1A1A
+axes.labelsize:     11
+axes.labelweight:   regular
+axes.titlesize:     12
+axes.titleweight:   regular
+axes.titlepad:      10
+axes.spines.top:    False
+axes.spines.right:  False
+axes.prop_cycle:    cycler('color', ['1A1A1A','2A3F8F','C45A3A','5B7553','8B6F47','7B6FA8'])
+
+# ── Ticks ────────────────────────────────────────────────────────────────
+xtick.color:        1A1A1A
+ytick.color:        1A1A1A
+xtick.labelsize:    10
+ytick.labelsize:    10
+xtick.major.width:  0.9
+ytick.major.width:  0.9
+xtick.direction:    out
+ytick.direction:    out
+
+# ── Lines and markers ────────────────────────────────────────────────────
+lines.linewidth:    1.8
+lines.markersize:   5
+
+# ── Grid ─────────────────────────────────────────────────────────────────
+axes.grid:          True
+grid.color:         1A1A1A
+grid.alpha:         0.10
+grid.linestyle:     -
+grid.linewidth:     0.5
+
+# ── Legend ───────────────────────────────────────────────────────────────
+legend.frameon:     False
+legend.fontsize:    10
+legend.labelcolor:  1A1A1A
+
+# ── Text ─────────────────────────────────────────────────────────────────
+text.color:         1A1A1A
+font.family:        serif
+font.serif:         Iowan Old Style, Charter, Georgia, DejaVu Serif, serif
+font.size:          11
+mathtext.fontset:   cm
+
+# ── Saving ───────────────────────────────────────────────────────────────
+savefig.facecolor:  F5F1E8
+savefig.edgecolor:  F5F1E8
+savefig.bbox:       tight
+savefig.pad_inches: 0.18
+savefig.dpi:        150
